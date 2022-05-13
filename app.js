@@ -3,7 +3,9 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const linesRoutes = require("./routes/lines");
-const userRouts = require("./routes/user");
+const authRoutes = require("./routes/auth");
+const stationRoutes = require("./routes/stations");
+const tripsRoutes = require("./routes/trips");
 
 const app = express();
 
@@ -21,13 +23,16 @@ app.use((req, res, next) => {
 });
 
 app.use("/lines", linesRoutes);
-app.use("/user", userRouts);
+app.use("/auth", authRoutes);
+app.use("/stations", stationRoutes);
+app.use("/trips", tripsRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;
   const message = error.message;
-  res.status(status).json({ message: message });
+  const data = error.data;
+  res.status(status).json({ message: message, data: data });
 });
 
 mongoose

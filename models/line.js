@@ -11,10 +11,12 @@ const lineSchema = new Schema(
       type: String,
       required: true,
     },
-    station: {
-      type: Object,
-      required: true,
-    },
+    stations: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Station",
+      },
+    ],
   },
   { timestamps: true }
 );
