@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
+const port = process.env.PORT || 8080;
+
 const linesRoutes = require("./routes/lines");
 const authRoutes = require("./routes/auth");
 const stationRoutes = require("./routes/stations");
@@ -40,6 +42,6 @@ mongoose
     "mongodb+srv://firseat:JoIRpGSWUD888miS@firseat.gsg55.mongodb.net/firseat?retryWrites=true&w=majority"
   )
   .then((result) => {
-    app.listen(8080); //port is 8080
+    app.listen(port);
   })
   .catch((err) => console.log(err));
