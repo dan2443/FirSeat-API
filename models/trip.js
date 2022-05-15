@@ -24,6 +24,12 @@ const tripSchema = new Schema(
         type: String,
       },
     ],
+    lineNumber: {
+      type: String,
+    },
+    finalDestination: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

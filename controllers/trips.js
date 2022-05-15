@@ -51,19 +51,35 @@ exports.createTrip = (req, res, next) => {
   const stationId = req.body.stationId;
   const lineId = req.body.lineId;
   const time = req.body.time;
-  const trip = new Trip({
-    stationId: stationId,
-    lineId: lineId,
-    time: time,
-  });
-  trip
-    .save()
-    .then((result) => {
-      res.status(200).json({
-        message: "Trip created successfully!",
-        line: result,
+  Line.findById(lineId)
+    .then((line) => {
+      if (!line) {
+        const error = new Error("Could not find line by lineId.");
+        error.statusCode = 404;
+        throw error;
+      }
+      const trip = new Trip({
+        stationId: stationId,
+        lineId: lineId,
+        time: time,
+        lineNumber: line.lineNumber,
+        finalDestination: line.finalDestination,
       });
-      console.log(result);
+      trip
+        .save()
+        .then((result) => {
+          res.status(200).json({
+            message: "Trip created successfully!",
+            line: result,
+          });
+          console.log(result);
+        })
+        .catch((err) => {
+          if (!err.statusCode) {
+            err.statusCode = 500;
+          }
+          next(err);
+        });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -84,27 +100,36 @@ exports.updateTrip = (req, res, next) => {
   const stationId = req.body.stationId;
   const lineId = req.body.lineId;
   const time = req.body.time;
-  Trip.findById(tripId)
-    .then((trip) => {
-      if (!trip) {
-        const error = new Error("Could not find trip by tripId.");
-        error.statusCode = 404;
-        throw error;
-      }
-      trip.stationId = stationId;
-      trip.lineId = lineId;
-      trip.time = time;
-      return trip.save();
-    })
-    .then((result) => {
-      res.status(200).json({ message: "Trip updated!", trip: result });
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+  Line.findById(lineId).then((line) => {
+    if (!line) {
+      const error = new Error("Could not find line by lineId.");
+      error.statusCode = 404;
+      throw error;
+    }
+    Trip.findById(tripId)
+      .then((trip) => {
+        if (!trip) {
+          const error = new Error("Could not find trip by tripId.");
+          error.statusCode = 404;
+          throw error;
+        }
+        trip.stationId = stationId;
+        trip.lineId = lineId;
+        trip.time = time;
+        trip.lineNumber = line.lineNumber;
+        trip.finalDestination = line.finalDestination;
+        return trip.save();
+      })
+      .then((result) => {
+        res.status(200).json({ message: "Trip updated!", trip: result });
+      })
+      .catch((err) => {
+        if (!err.statusCode) {
+          err.statusCode = 500;
+        }
+        next(err);
+      });
+  });
 };
 
 exports.deleteTrip = (req, res, next) => {
