@@ -20,4 +20,6 @@ router.delete("/:stationId/:lineId", stationsController.removeLine);
 
 router.delete("/:stationId", stationsController.deleteStation);
 
+router.get("/:NFCToken", stationsController.getStationByNFCToken);
+
 module.exports = router;

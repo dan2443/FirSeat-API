@@ -38,9 +38,11 @@ exports.createStation = (req, res, next) => {
   }
   const stationNumber = req.body.stationNumber;
   const name = req.body.name;
+  const NFCToken = req.body.NFCToken;
   const station = new Station({
     stationNumber: stationNumber,
     name: name,
+    NFCToken: NFCToken,
   });
   station
     .save()
@@ -204,6 +206,28 @@ exports.updateStation = (req, res, next) => {
     })
     .then((result) => {
       res.status(200).json({ message: "Station updated!", station: result });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.getStationByNFCToken = (req, res, next) => {
+  const NFCToken = req.params.NFCToken;
+  Station.find({ NFCToken: NFCToken })
+    .then((station) => {
+      if (!station) {
+        const error = new Error("Could not find station by NFCToken.");
+        error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({
+        message: "station fetched.",
+        station: station,
+      });
     })
     .catch((err) => {
       if (!err.statusCode) {

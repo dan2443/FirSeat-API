@@ -16,6 +16,9 @@ const stationSchema = new Schema({
       ref: "Line",
     },
   ],
+  NFCToken: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("Station", stationSchema);
