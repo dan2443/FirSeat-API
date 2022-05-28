@@ -177,13 +177,13 @@ exports.registerToTrip = (req, res, next) => {
         error.statusCode = 400;
         throw error;
       }
-      if (trip.avalibleSeats < 1) {
+      if (trip.availableSeats < 1) {
         const error = new Error("Trip is full.");
         error.statusCode = 400;
         throw error;
       }
       trip.registeredUsers.push(userId);
-      trip.avalibleSeats--;
+      trip.availableSeats--;
 
       return trip.save();
     })
@@ -223,7 +223,7 @@ exports.unregisterFromTrip = (req, res, next) => {
         throw error;
       }
       trip.registeredUsers.pull(userId);
-      trip.avalibleSeats++;
+      trip.availableSeats++;
 
       return trip.save();
     })

@@ -15,7 +15,7 @@ const tripSchema = new Schema(
       type: String,
       required: true,
     },
-    avalibleSeats: {
+    availableSeats: {
       type: Number,
       default: 50,
     },
