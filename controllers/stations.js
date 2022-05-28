@@ -192,6 +192,7 @@ exports.updateStation = (req, res, next) => {
   }
   const stationId = req.params.stationId;
   const stationNumber = req.body.stationNumber;
+  const NFCToken = req.body.NFCToken;
   const name = req.body.name;
   Station.findById(stationId)
     .then((station) => {
@@ -202,6 +203,7 @@ exports.updateStation = (req, res, next) => {
       }
       station.stationNumber = stationNumber;
       station.name = name;
+      station.NFCToken = NFCToken;
       return station.save();
     })
     .then((result) => {
