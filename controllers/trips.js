@@ -100,6 +100,7 @@ exports.updateTrip = (req, res, next) => {
   const stationId = req.body.stationId;
   const lineId = req.body.lineId;
   const time = req.body.time;
+  const availableSeats = req.body.availableSeats;
   Line.findById(lineId).then((line) => {
     if (!line) {
       const error = new Error("Could not find line by lineId.");
@@ -118,6 +119,7 @@ exports.updateTrip = (req, res, next) => {
         trip.time = time;
         trip.lineNumber = line.lineNumber;
         trip.finalDestination = line.finalDestination;
+        trip.availableSeats = availableSeats;
         return trip.save();
       })
       .then((result) => {
